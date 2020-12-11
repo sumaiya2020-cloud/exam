@@ -1,0 +1,46 @@
+---
+title: "Question 4"
+author: "Sumaiya Mehreen"
+date: "12/11/2020"
+output: html_document
+---
+
+```{r}
+data<-read.csv("question 4.csv")
+data$Method<-as.factor(data$Method)
+data$Obsevations1<-cbind(data$Obsevations)
+str(data)
+install.packages("nopar")
+library(nonpar)
+install.packages("RVAideMemoire")
+library(RVAideMemoire)
+```
+
+```{r}
+cochrans.q(data$Obsevations1)
+```
+
+As p-value > alpha, there is no difference among the methods.
+
+But for further analysis, we can use different ways.
+
+a) Checking the assumption of constant variance(using plot)
+```{r}
+anova<-aov(data$Obsevations~data$Method,data=data)
+summary(anova)
+plot(anova)
+par(mfrow=c(2,2))
+plot(anova)
+```
+
+From Residuals vs Fitted and Residuals vs Leverage plots we can see that errors are not parallel to fitted values.We can conclude that variances are not constant.
+
+b) Checking the assumption of constant variance(Using bartlett test)
+
+Ho= Samples have equal variances
+
+```{r}
+bartlett.test(data$Obsevations~data$Method,data=data)
+```
+
+p-value=0.01947 < alpha=0.05. We reject the null hypothesis. We can conclude that at least one of the sample variances is different.
